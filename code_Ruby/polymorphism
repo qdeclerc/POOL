@@ -1,0 +1,19 @@
+class knight
+	def initialize(name)
+		@name = "ser " + name
+	end
+
+	def fight
+		puts "#{@name} shouts: FOR JUSTICE!!"
+	end
+end
+
+class knight
+	def initialize(name)
+		@name = name
+	end
+
+	def fight
+		puts "#{@name} asks: How many gold??"
+	end
+end

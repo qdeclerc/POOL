@@ -1,0 +1,166 @@
+\documentclass[11pt,a4paper,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+
+% Listing settings
+\lstset{language=Ruby,
+        basicstyle=\scriptsize,
+        backgroundcolor=\color{Gray},
+        commentstyle=\color{White},
+        numberstyle=\scriptsize\color{Black},
+        morekeywords={puts, private, public, protected},
+        keywordstyle=\color{Blue},
+        numbers=left,
+        xleftmargin=9pt,
+        framexleftmargin=9pt,
+        breaklines=true,
+        numbersep=1pt,
+        tabsize=2}
+
+\title{Comparison of two object-oriented languages: Eiffel and Ruby}
+\author{Quentin De Clerck}
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Foreword}
+This paper is written in an evaluation context of the course Principles of Object-Oriented Programming Languages and has for aim to compare the features of two object-oriented languages. The chosen languages are Eiffel and Ruby. The reasons we decided to choose these two languages is that both have a different type system and philosophies. Eiffel is a statically typed language that aims to produce reusable, extensible and reliable code \textbf{REFERENCE} . Ruby is dynamically typed and has for goals simplicity and productivity. .
+\\
+\\
+Ruby version: ruby 2.0.0p247 (2013-06-27 revision 41674) [universal.x86\_64-darwin13].
+Eiffel version:  EiffelStudio 13 (13.11.9.3542 GPL Edition - macosx-x86-64).
+\\
+\\
+The structure of the paper is divided into two sections. The first section compares for both languages the principal features that are present in most object-oriented programming languages. Since both languages are different in many ways, the second section will focus more on the features that are the most specific to the languages and those that reflects the best the philosophies proper to Eiffel and Ruby. 
+
+\section{General OO concepts}
+The aim of this section is to discuss the design choices of the developers of the languages for main concepts of object-oriented languages and to compare the different approaches. 
+\subsection{Everything is an object}
+Every value in both Eiffel and Ruby are object, even types that are in many languages called primitive types (for example: integers, booleans). Eiffel and Ruby have a similar structure. There is in both languages a class at the top of the hierarchy, this means a class from which every other class in the language inherits its methods. In Ruby this class is called BasicObject and in Eiffel it is called ANY. Besides the ANY class, Eiffel also has the NONE class, which is the class that inherits from every class in the language.
+\subsection{Access Control}
+% http://se.inf.ethz.ch/old/teaching/ss2007/0050/slides/03_softarch_info_hiding_lang_constr_6up.pdf
+% http://docs.eiffel.com/book/method/et-dynamic-structure-execution-model#Assigner_commands
+
+% Access modifiers
+% Low coupling refers to a relationship in which one module interacts with another module through a simple and stable interface and does not need to be concerned with the other module's internal implementation (see Information Hiding).
+
+%A benefit of encapsulation is that it can reduce system complexity, and thus increases robustness, by allowing the developer to limit the inter-dependencies between software components. Almost always, there is a way to override such protection – usually via reflection API 
+
+% Modularity: reusability + extensibility
+
+% Ruby: allow access via object methods
+
+%In this part we mean by encapsulation the mechanism for information hiding, even if it also mean the binding of a set of methods to the data type. Eiffel and Ruby are both able to hide the internal state of the objects but using different mechanisms. 
+
+% x.attr := y niet mogelijk, test dit in RUBY
+
+
+% Not sure this part belongs here...
+In Eiffel there is no possibility to directly perform an assignment on the value of an attribute. The reason for this inability to assign attributes from the outside is because in Eiffel it is impossible to know from the outside of the object if the feature called is a stored or computed value. If there are changes in the implementation, they do not affect the client class by forcing it to change its interface. This concept is called the uniform-access principle and is central in Eiffel. Because it is impossible to know if the expression is an attribute or a function, the only way to change the state of an object is thus to make a procedure than internally modifies the state: a "setter". But there exist a facility to make it look like assignment is directly possible. This mechanism is called assigner command and consists of specifying in the declaration of the attribute which is the related assignment procedure. The assignment of the attribute will be transformed at compile time in the assignment procedure specified in the declaration. They implemented this facility because developers are used to direct access in other programming languages.
+\\
+\\
+% http://en.wikipedia.org/wiki/Uniform_access_principle
+An instance variable in Ruby cannot be read/written without calling a method. Thus there is a need for a  "getter" and "setter". The keyword attr\_read, attr\_write and attr\_accessor are syntactic sugar for creating theses methods. Like in Eiffel, the client is unaware if the method is a stored value or a computed one. Thus Ruby also implements the uniform-access principle.
+\\
+\\
+Now there are other mechanisms we have not discussed yet about access controls, namely how to control access to methods to clients outside the scope of the class.
+\\
+\\
+There are three kinds of access controllers in Ruby: 
+\begin{description}
+\item[public] accessible without restrictions.
+\item[protected] \textit{only} accessible within the class and subclasses.
+\item[private] inaccessible \textit{if receiver is explicit} within class and subclasses.
+\end{description}
+What is meant with \"if the receiver is explicit\"  is that if the method is called for a specific object, like self or a parameter, then the call will result in an error.By default, every method is public in Ruby and it is possible to change the visibility of the methods at run-time due to the dynamic nature of the language. This dynamic nature will be discussed in a later section.
+\\
+\\
+Eiffel has another approach called Selective Export. It specifies a list of clients to export, enabling them to get access with the features they were listed for. This approach enables to be very precise about the scope of the features. The different possibilities are:
+\begin{itemize}
+\item Making a set of features private to the class by specifying that the feature set should not be exported: \{NONE\}.
+\item Making a set of features public to every possible client by specifying nothing or by specifying: \{ANY\}.
+\item Making a set of features public to a set of clients by specifying the clients, for example \{Class\_A, Class\_B, Class\_C\}. It is possible to specify the current class as client, then every subclass will inherit the feature.
+\end{itemize}
+This export technology allows to be very specific in the choice of accessible features. Export violations are statically checked by the compiler and thus are detected at compile-time and not at run-time.
+\subsection{Inheritance}
+Both languages support single class inheritance but only Eiffel supports multiple inheritance. However Ruby supports mixins which offers the same possibilities as multiple inheritance.
+\\
+% 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{diamond.pdf}
+\caption{Example of the diamond problem}
+\label{fig:diamond}
+\end{figure}
+Multiple inheritance is a object-oriented feature where a class inherits from more than one parent class. This can lead to problems like the diamond problem depicted in figure \ref{fig:diamond}. The diamond problem arises when two or more parent classes inherit from the same superclass. This will provoke nameclashes in the subclass inheriting from the multiple parents. Eiffel provides a flexible approach to multiple inheritance. It introduces different keywords that enable to adapt the features inherited from the parent classes. The keywords that are provided for feature adaptation are:
+\begin{description}
+\item[rename] Renames a inherited feature.
+\item[export] Changes the export list of the inherited features.
+\item[undefine] Removes one of the inherited feature definitions.
+\item[redefine] Redefines one of the inherited feature definitions.
+\item[select] Selects the feature to use when there are homonyms.
+\end{description}
+Thus the diamond problem can be easily solved in Eiffel thanks to the provided tools. A simple example for solving the depicted problem in figure \ref{fig:diamond} is to rename the move feature from the Winged class into fly and select the fly feature. Another approach could be to undefine one of the features and selecting the other. Inheritance has also an impact in Design by Contract, a language-specific feature of Eiffel that will be discussed later on in the paper. 
+\\
+\\
+%% http://ruby-doc.com/docs/ProgrammingRuby/html/tut_modules.html
+Ruby does not support multiple inheritance,  but a \emph{mixin} can be an equivalent feature. Before explaining what a mixin is it is important to explain modules in Ruby. A module is a sort of namespace grouping variables and functions together for obtaining a whole that provides functionalities. Modules cannot be instantiated, their purpose is to add functionality to a class. A mixin allows to include a module as a sort of superclass to the desired class, to mix the module in the class. It is possible to mix more than one module in a class, thus it looks very similar to multiple inheritance. In the example from figure \ref{fig:diamond}, the superclasses could be two modules that implement the different move behaviors. But even if Ruby uses mixins instead of multiple inheritance, the nameclash problem persists. Ruby resolves it automatically by overriding the previous definition, thus it is important for the programmer to be aware of this and give another name to one of the definition if the two method definitions are needed.
+\subsection{Polymorphism} % structured polymorphism...?
+% Duck Typing: allows polymorphism without inheritance
+% Polymorphism in Eiffel: genericity and subtype polymorphism (polymorphic assignment, type x conforms to type y)
+% No one supports overloading
+
+% First, it is interesting to look at genericity in Ruby and Eiffel. For Ruby, genericity is not relevant since the language is dynamically typed and thus the variables and parameters are not typed. This is a lot more relevant in Eiffel. Making a class generic enables it to perform standard operations on unkown types that is represented by a formal generic parameter.
+
+Polymorphism is a key feature in object-oriented programming languages. Both Ruby and Eiffel support this feature but in a very different conceptual way. Eiffel supports subtype polymorphism, it means that Eiffel allows polymorphism only for the types that have a superclass in common. Thus inheritance is primordial for  subtype polymorphism. 
+\\
+\\ 
+% http://en.wikipedia.org/wiki/Duck_typing
+In Ruby it is also possible to achieve it using inheritance, but this is more a consequence of the mechanism that permits Ruby to support polymorphism. Ruby is dynamically typed and supports a special style of typing namely, \emph{duck typing}. Duck typing focusses on the methods of an object instead of its type. If the method is supported by the object it will be called whatever the type or output is. If the method call is not supported, then a run-time error is returned. Duck typing is the concept used for polymorphism in Ruby allows thus polymorphism without inheriting from a superclass. It is trivial why polymorphism also works with inheritance in Ruby, classes that inherit from a superclass inherit its methods and duck typing focusses on the presence of methods.
+\\
+\\
+% http://blogs.msdn.com/b/ericwhite/archive/2008/10/29/anders-hejlsberg-introduces-c-4-0-at-pdc-2008.aspx
+So even if both languages support polymorphism, their approach is completely different. Polymorphic calls are dependent of the type of objects in Eiffel and in Ruby they are dependent of the presence of the method. From a software engineering point of view it is logical that Eiffel focusses on the subtype polymorphism. First it is statically typed, thus there should be a specific type declared with the variable or parameter. However, this could be resolved with a keyword that instructs the compiler that a variable should be dynamically typed. Second and most importantly, this sort of solution is not in the philosophy of the Eiffel language.  One of the goals of Eiffel is to produce software that is reliable and maintainable. If duck typing should be adapted in Eiffel then it would be only reliable if the programmers know exactly which type of objects will passed to the methods and the maintainability would also be tricky. Imagine that the call changes of name in one of the classes, with duck typing it would not be clear that a method is used in a polymorphic call and by changing its name the programmer introduces errors that are difficult to resolve. Thus it is important to be aware of the methods that are used in a polymorphic context. Subtype polymorphism in a statically typed language is a much more reliable mechanism because the polymorphic calls are only possible for a predefined restricted set of types. It is also more easily maintained, because it is checked at compile time that every class implements the method.
+
+\subsection{Reflection}
+
+\section{Language-specific Features}
+\subsection{Eiffel}
+\subsubsection{Deferred Classes}
+\subsubsection{Frozen Classes}
+\subsubsection{Generic Classes}
+\subsubsection{Design by Contract}
+If there is one language specific feature that is essential in Eiffel, then this concept is \emph{Design by Contract}. The idea is that every system has interacting components and that their cooperation should follow some strict specifications (the contract) that settle the obligations and benefits for both client and supplier. The obligations have to be satisfied before feature calls and are called \emph{preconditions}. The benefits describe what the result should be if the precondition was met. These benefits are called \emph{postconditions}. Every contract also include class invariants, which are conditions that have to be ensured during the lifetime of an object, including at its creation.
+
+% assertions constructs
+
+\subsection{Void-safety}
+
+
+\subsection{Ruby}
+\subsubsection{Open Objects}
+\subsubsection{Meta-classes}
+
+\section{Conclusion}
+\section{References}
+\newpage
+% ACCESS CODE
+\lstinputlisting[label=rb:access,language=Ruby,caption={Access Control in Ruby}]{code_Ruby/access.rb}
+\lstinputlisting[label=e:access,language=Eiffel,caption={Access Control in Eiffel}]{code_Eiffel/access.e}
+
+% INHERITANCE CODE
+\lstinputlisting[label=rb:inheritance,language=Ruby,caption={Inheritance in Ruby}]{code_Ruby/inheritance.rb}
+\lstinputlisting[label=e:inheritance,language=Eiffel,caption={Inheritance in Eiffel}]{code_Eiffel/inheritance.e}
+
+%POLYMORPHISM CODE
+\lstinputlisting[label=rb:polymorphism,language=Ruby,caption={Polymorphism in Ruby}]{code_Ruby/polymorphism.rb}
+\lstinputlisting[label=e:polymorphism,language=Eiffel,caption={Polymorphism in Eiffel}]{code_Eiffel/polymorphism.e}
+
+\end{document}

@@ -1,0 +1,11 @@
+
+*.aux
+
+*.log
+
+*.gz
+
+*.toc
+
+paper_assignment.pdf
+/code_eiffel/Eiffel-project
