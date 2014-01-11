@@ -36,7 +36,6 @@ class Lord
 		plot #works
 		self.plot #does not work
 	end
-
 	
 
 end

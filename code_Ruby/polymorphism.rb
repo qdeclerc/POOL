@@ -1,5 +1,5 @@
 class Knight
-	def initialize(name)
+	def initialize name 
 		@name = "ser " + name
 	end
 
@@ -9,7 +9,7 @@ class Knight
 end
 
 class Sellsword
-	def initialize(name)
+	def initialize name
 		@name = name
 	end
 
@@ -18,11 +18,11 @@ class Sellsword
 	end
 end
 
-def defendQueen(knight)
+def defendQueen knight
 	knight.fight
 end
 
-Barristan = Knight.new("Barristan")
-Bronn = Sellsword.new("Bronn")
-defendQueen(Barristan)
-defendQueen(Bronn)
+barristan = Knight.new "Barristan"
+bronn = Sellsword.new "Bronn"
+defendQueen barristan
+defendQueen bronn

@@ -11,6 +11,7 @@ module contract
 
 	ensure(cond)
 		if cond
+			
 		else 
 			error
 		end
