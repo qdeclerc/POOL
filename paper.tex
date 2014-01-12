@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper,twocolumn]{article}
+\documentclass[12pt,a4paper,twocolumn]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
@@ -107,7 +107,7 @@ Multiple inheritance is a object-oriented feature where a class inherits from mo
 \item[redefine] Redefines one of the inherited feature definitions.
 \item[select] Selects the feature to use when there are homonyms.
 \end{description}
-Thus the diamond problem can be easily solved in Eiffel thanks to the provided tools. A simple example for solving the depicted problem in figure \ref{fig:diamond} is to rename the move feature from the Winged class into fly and select the fly feature. Another approach could be to undefine one of the features and selecting the other. Inheritance has also an impact in Design by Contract, a language-specific feature of Eiffel that will be discussed later on in the paper. 
+Thus the diamond problem can be easily solved in Eiffel thanks to the provided tools. A simple example for solving the depicted problem in figure \ref{fig:diamond} is to rename the move feature from the Winged class into fly and select the fly feature. Another approach could be to undefine one of the features and selecting the other.
 \\
 \\
 %% http://ruby-doc.com/docs/ProgrammingRuby/html/tut_modules.html
@@ -132,21 +132,29 @@ So even if both languages support polymorphism, their approach is completely dif
 \subsection{Reflection}
 
 \section{Language-specific Features}
+While the first section enumerates differences in general object-oriented concepts, this section focusses more on features that characterize the languages. The aim is not make an exhaustive list of features but more to pick some that really show the purpose and philosophy of the languages.
 \subsection{Eiffel}
-\subsubsection{Deferred Classes}
-\subsubsection{Frozen Classes}
-\subsubsection{Generic Classes}
+% http://docs.eiffel.com/book/method/et-overview
+The goal of Eiffel is to provide rather a method that guides the programmer in software development than only a language for programming. It focusses on some the whole software development process and on the quality of the software. 
 \subsubsection{Design by Contract}
-If there is one language specific feature that is essential in Eiffel, then this concept is \emph{Design by Contract}. The idea is that every system has interacting components and that their cooperation should follow some strict specifications (the contract) that settle the obligations and benefits for both client and supplier. The obligations have to be satisfied before feature calls and are called \emph{preconditions}. The benefits describe what the result should be if the precondition was met. These benefits are called \emph{postconditions}. Every contract also include class invariants, which are conditions that have to be ensured during the lifetime of an object, including at its creation.
-
-% assertions constructs
-
+% http://docs.eiffel.com/book/method/et-design-contract-tm-assertions-and-exceptions
+% Eiffel essentials
+If there is one language specific feature that is essential in Eiffel, then this concept is \emph{Design by Contract}. The idea is that every system has interacting components and that their cooperation should follow some strict specifications (the contract) that settle the obligations and benefits for both client and supplier. The obligations have to be satisfied before feature calls. They are called \emph{preconditions} and are introduced by the \emph{require} keyword. The benefits describe what the result should be if the precondition was met. Benefits are thus \emph{postconditions} and can be specified using the \emph{ensure} keyword. Every contract also include \emph{class invariants}, which are conditions that have to be ensured during the lifetime of an object, including at its creation. Class invariants are specified after the \emph{invariant} keyword. These are the three main catergories of contracts and are implemented using assertions. Each assertion may be tagged, it is not mandatory and does not influence the contract but it is helpful for debugging and provides extra documentation. Since assertions are boolean expressions, it is possible to formulate them in function calls. This enables to express more complex conditions.
+\\
+\\
+There are still three other types of assertions: 
+\begin{itemize}
+\item Instruction check: checks if a certain condition is respected at a specific moment during the execution.
+\item Loop invariants: states that some conditions have to be ensured when exiting the loop.
+\item Loop variant: make sure the loop is finite by decreasing an integer expression at each loop iteration and check that the integer stays positive.
+\end{itemize}
+Even if Design by Contract is not mandatory to use when developing in Eiffel, it is strongly encouraged because it has many benefits. It is a method that helps the developers for designing and implementing correct software in first instance. They push the developers to think about specifications for the code to write. It has already been pointed out that using tags for assertions are useful for code documentation and debugging. Design by Contract is thus a methodology that encourage the programmer to think about the code, to write specifications down about the code and to design the code such that the specifications are fulfilled.
 \subsection{Void-safety}
 
 
 \subsection{Ruby}
 \subsubsection{Open Objects}
-\subsubsection{Meta-classes}
+\subsubsection{Meta-class model}
 
 \section{Conclusion}
 \section{References}
