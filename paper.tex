@@ -4,8 +4,11 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{graphicx}
 
+\usepackage{graphicx}
+\usepackage{float} %precise emplacement float
+
+\usepackage{hyperref}
 
 \usepackage[usenames,dvipsnames]{color}
 \usepackage{listings}
@@ -43,26 +46,19 @@ The structure of the paper is divided into two sections. The first section compa
 \section{General OO concepts}
 The aim of this section is to discuss the design choices of the developers of the languages for main concepts of object-oriented languages and to compare the different approaches. 
 \subsection{Everything is an object}
+% http://ruby-doc.org/core-2.0/Object.html
+% 
 Every value in both Eiffel and Ruby are object, even types that are in many languages called primitive types (for example: integers, booleans). Eiffel and Ruby have a similar structure. There is in both languages a class at the top of the hierarchy, this means a class from which every other class in the language inherits its methods. In Ruby this class is called BasicObject and in Eiffel it is called ANY. Besides the ANY class, Eiffel also has the NONE class, which is the class that inherits from every class in the language.
 \subsection{Access Control}
 % http://se.inf.ethz.ch/old/teaching/ss2007/0050/slides/03_softarch_info_hiding_lang_constr_6up.pdf
 % http://docs.eiffel.com/book/method/et-dynamic-structure-execution-model#Assigner_commands
 
 % Access modifiers
-% Low coupling refers to a relationship in which one module interacts with another module through a simple and stable interface and does not need to be concerned with the other module's internal implementation (see Information Hiding).
-
-%A benefit of encapsulation is that it can reduce system complexity, and thus increases robustness, by allowing the developer to limit the inter-dependencies between software components. Almost always, there is a way to override such protection – usually via reflection API 
 
 % Modularity: reusability + extensibility
 
 % Ruby: allow access via object methods
 
-%In this part we mean by encapsulation the mechanism for information hiding, even if it also mean the binding of a set of methods to the data type. Eiffel and Ruby are both able to hide the internal state of the objects but using different mechanisms. 
-
-% x.attr := y niet mogelijk, test dit in RUBY
-
-
-% Not sure this part belongs here...
 In Eiffel there is no possibility to directly perform an assignment on the value of an attribute. The reason for this inability to assign attributes from the outside is because in Eiffel it is impossible to know from the outside of the object if the feature called is a stored or computed value. If there are changes in the implementation, they do not affect the client class by forcing it to change its interface. This concept is called the uniform-access principle and is central in Eiffel. Because it is impossible to know if the expression is an attribute or a function, the only way to change the state of an object is thus to make a procedure than internally modifies the state: a "setter". But there exist a facility to make it look like assignment is directly possible. This mechanism is called assigner command and consists of specifying in the declaration of the attribute which is the related assignment procedure. The assignment of the attribute will be transformed at compile time in the assignment procedure specified in the declaration. They implemented this facility because developers are used to direct access in other programming languages.
 \\
 \\
@@ -90,10 +86,8 @@ Eiffel has another approach called Selective Export. It specifies a list of clie
 \end{itemize}
 This export technology allows to be very specific in the choice of accessible features. Export violations are statically checked by the compiler and thus are detected at compile-time and not at run-time.
 \subsection{Inheritance}
-Both languages support single class inheritance but only Eiffel supports multiple inheritance. However Ruby supports mixins which offers the same possibilities as multiple inheritance.
-\\
-% 
-\begin{figure}[h!]
+Both languages support single class inheritance but only Eiffel supports multiple inheritance. However Ruby supports mixins which offers the similar possibilities as multiple inheritance.
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{diamond.pdf}
 \caption{Example of the diamond problem}
@@ -127,9 +121,7 @@ In Ruby it is also possible to achieve it using inheritance, but this is more a 
 \\
 \\
 % http://blogs.msdn.com/b/ericwhite/archive/2008/10/29/anders-hejlsberg-introduces-c-4-0-at-pdc-2008.aspx
-So even if both languages support polymorphism, their approach is completely different. Polymorphic calls are dependent of the type of objects in Eiffel and in Ruby they are dependent of the presence of the method. From a software engineering point of view it is logical that Eiffel focusses on the subtype polymorphism. First it is statically typed, thus there should be a specific type declared with the variable or parameter. However, this could be resolved with a keyword that instructs the compiler that a variable should be dynamically typed. Second and most importantly, this sort of solution is not in the philosophy of the Eiffel language.  One of the goals of Eiffel is to produce software that is reliable and maintainable. If duck typing should be adapted in Eiffel then it would be only reliable if the programmers know exactly which type of objects will passed to the methods and the maintainability would also be tricky. Imagine that the call changes of name in one of the classes, with duck typing it would not be clear that a method is used in a polymorphic call and by changing its name the programmer introduces errors that are difficult to resolve. Thus it is important to be aware of the methods that are used in a polymorphic context. Subtype polymorphism in a statically typed language is a much more reliable mechanism because the polymorphic calls are only possible for a predefined restricted set of types. It is also more easily maintained, because it is checked at compile time that every class implements the method.
-
-\subsection{Reflection}
+So even if both languages support polymorphism, their approach is completely different. Polymorphic calls are dependent of the type of objects in Eiffel and in Ruby they are dependent of the presence of the method. From a software engineering point of view it is logical that Eiffel focusses on the subtype polymorphism. First it is statically typed, thus there should be a specific type declared with the variable or parameter. However, this could be resolved with a keyword that instructs the compiler that a variable should be dynamically typed. Second and most importantly, this sort of solution is not in the philosophy of the Eiffel language. One of the goals of Eiffel is to produce software that is reliable and maintainable. If duck typing should be adapted in Eiffel then it would be only reliable if the programmers know exactly which type of objects will passed to the methods. The maintainability of the software would also be tricky, imagine that a method call changes of name in one of the classes, with duck typing it would not be clear that this method was used in a polymorphic call and by changing its name the programmer introduces errors that can be tedious to resolve. Thus it is important to be aware of the methods that are used in a polymorphic context when a language supports duck typing. Subtype polymorphism in a statically typed language is a much more reliable mechanism because the polymorphic calls are only possible for a restricted set of types and eliminate a lot of possible failures. It is also more easily maintained, because it is checked at compile time that every class implements the method. In Ruby's case, it is also logical that duck typing is used and not subtype polymorphism. First, subtype polymorphism is implicit with duck typing. Second, Ruby is dynamically typed, which means the types are known at run-time. This implies that there would be no secure way to ensure that the method call is applied on a particular class hierarchy. Perhaps it could be achieved with a kind of type cast for the desired superclass. But then it would still return a run-time error when the types are not correct, like it does when the method is not defined for an object. This is much more restrictive and goes also against the philosophy of Ruby which is simplicity.
 
 \section{Language-specific Features}
 While the first section enumerates differences in general object-oriented concepts, this section focusses more on features that characterize the languages. The aim is not make an exhaustive list of features but more to pick some that really show the purpose and philosophy of the languages.
@@ -148,10 +140,25 @@ There are still three other types of assertions:
 \item Loop invariants: states that some conditions have to be ensured when exiting the loop.
 \item Loop variant: make sure the loop is finite by decreasing an integer expression at each loop iteration and check that the integer stays positive.
 \end{itemize}
-Even if Design by Contract is not mandatory to use when developing in Eiffel, it is strongly encouraged because it has many benefits. It is a method that helps the developers for designing and implementing correct software in first instance. They push the developers to think about specifications for the code to write. It has already been pointed out that using tags for assertions are useful for code documentation and debugging. Design by Contract is thus a methodology that encourage the programmer to think about the code, to write specifications down about the code and to design the code such that the specifications are fulfilled.
+Even if Design by Contract is not mandatory to use when developing in Eiffel, it is strongly encouraged because it has many benefits. It is a method that helps the developers for designing and implementing correct software in first instance. They push the developers to think about specifications for the code to write. It has already been pointed out that using tags for assertions are useful for code documentation and debugging. Contracts serve also to generate automatically documentation in Eiffel, this means that the documentation is always up-to-date. Design by Contract is thus a methodology that encourage the programmer to think about the code, to write specifications down about the code and to design the code such that the specifications are fulfilled. This is thus a great feature for reliability and maintainability of the software.
+\\
+\\
+There exist libraries in many programming languages that offers Design by Contract, even for \href{https://github.com/egonSchiele/contracts.ruby}{Ruby}.
 \subsection{Void-safety}
+Void-safety is a language feature that protects the software from run-time errors caused by method calls to void references. References are used for accessing objects in object-oriented programming languages. This can lead to problems when the reference is Void (or null in other languages).
+\\
+\\
+Eiffel is statically typed and thus can ensure that a feature will be applied at run-time to the correct object. But nothing ensures that the object will exist when the feature will be executed. With Void-safety the compiler can give the assurance that an object will be attached to the reference whenever the feature is executed. In other words, the compiler analyses the code statically and ensures that feature calls are valid only if the feature executes a call on an attached object and not to Void.
+\\
+\\
+There are patterns that check if a variable is void-safe. The Certified Attachment Pattern (CAP) checks if a local variables or formal parameters is void. The attached syntax takes a step further. It is another sort of CAP that checks if the object is attached and provides a safe access to the objects that are attached as class attributes. Eiffel introduced two kind of types in order to assure the void-safeness of the softwarel:
+\begin{description}
+\item[Attached Type: ] The compiler will prevent a variable of an attached type to be set to Void.
+\item[Detachable Type: ] Theses variables may be set to Void. Thus direct access to detachable typed variables is never void-safe.% which means that CAPs and attached syntax are only needed on them. 
+\end{description}
+It is also important to note that it is impossible to assign a detachable variable to an attached one, but the opposite is possible. The creation procedure is responsible for ensuring that all the attributes of an attached type are set after the creation. 
 
-
+This is a feature that improves the reliability of the produced software and shows again that Eiffel's primary concern is to enhance the software quality.
 \subsection{Ruby}
 \subsubsection{Open Objects}
 \subsubsection{Meta-class model}
