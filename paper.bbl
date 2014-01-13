@@ -1,0 +1,72 @@
+\begin{thebibliography}{10}
+
+\bibitem{accessControlEiffel}
+Ilinca Ciupa and Bertrand Meyer.
+\newblock Lecture 3: Language constructs for modularity and information hiding.
+\newblock
+  \url{http://se.inf.ethz.ch/old/teaching/ss2007/0050/slides/03_softarch_info_hiding_lang_constr_6up.pdf},
+  2007.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{meyer2001eiffel}
+Bertrand Meyer and Rich Ayling.
+\newblock An eiffel tutorial.
+\newblock 2001.
+
+\bibitem{eiffelEssentials}
+n.d.
+\newblock Eiffel: The essentials.
+\newblock
+  \url{http://se.inf.ethz.ch/courses/2013b_fall/eprog/additional_materials/eiffel_the_essentials.pdf}.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{voidSafety}
+n.d.
+\newblock Void-safe programming in eiffel.
+\newblock \url{http://docs.eiffel.com/book/export/html/2200}.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{wiki:monkey}
+n.d.
+\newblock Monkey patching--- {W}ikipedia{,} the free encyclopedia.
+\newblock \url{http://en.wikipedia.org/wiki/Monkey_patching}, December 2013.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{wiki:class}
+n.d.
+\newblock Ruby {P}rogramming/{S}yntax/{C}lasses--- {W}ikibooks.
+\newblock \url{http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes},
+  May 2013.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{wiki:uniform}
+n.d.
+\newblock Uniform access principle--- {W}ikipedia{,} the free encyclopedia.
+\newblock \url{http://en.wikipedia.org/wiki/Uniform_access_principle}, December
+  2013.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{wiki:duck}
+n.d.
+\newblock Duck typing--- {W}ikipedia{,} the free encyclopedia.
+\newblock \url{http://en.wikipedia.org/wiki/Duck_typing}, January 2014.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{basicObjectDoc}
+ruby doc.org.
+\newblock Basicobject class.
+\newblock \url{http://ruby-doc.org/core-2.0/BasicObject.html}.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{rubyAbout}
+ruby lang.org.
+\newblock About ruby.
+\newblock \url{http://www.ruby-lang.org/en/about/}.
+\newblock Online; Accessed 13-January-2014.
+
+\bibitem{thomas2001programming}
+David Thomas and Andrew Hunt.
+\newblock Programming ruby.
+\newblock {\em Dr. Dobb’s Journal}, 5, 2001.
+
+\end{thebibliography}
