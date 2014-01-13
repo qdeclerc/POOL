@@ -14,12 +14,13 @@
 \usepackage{listings}
 
 \usepackage{natbib}
+\renewcommand{\bibsection}{}
 
 % Listing settings
 \lstset{language=Ruby,
         basicstyle=\scriptsize,
-        backgroundcolor=\color{Gray},
-        commentstyle=\color{White},
+        backgroundcolor=\color{White},
+        commentstyle=\color{Gray},
         numberstyle=\scriptsize\color{Black},
         morekeywords={puts, private, public, protected},
         keywordstyle=\color{Blue},
@@ -47,7 +48,7 @@ The structure of the paper is divided into two sections. The first section compa
 \section{General OO concepts}
 The aim of this section is to discuss the design choices of the developers of the languages for main concepts of object-oriented languages and to compare the different approaches. 
 \subsection{Everything is an object}
-Every value in both Eiffel and Ruby are object, even types that are in many languages called primitive types (for example: integers, booleans). Eiffel and Ruby have a similar structure. There is in both languages a class at the top of the hierarchy, this means a class from which every other class in the language inherits its methods. In Ruby this class is called BasicObject\cite{basicObjectDoc} and in Eiffel it is called ANY\cite{meyer2001eiffel}. Besides the ANY class, Eiffel also has the NONE class, which is the class that inherits from every class in the language. Ruby pushes the object-orientation a little bit further with meta-classes. This subject will come back later on in section \ref{sec:metaclass}.
+Every value in both Eiffel and Ruby are object, even types that are in many languages called primitive types (for example: integers, booleans). Eiffel and Ruby have a similar structure. There is in both languages a class at the top of the hierarchy, this means a class from which every other class in the language inherits its methods. In Ruby this class is called BasicObject\cite{basicObjectDoc} and in Eiffel it is called ANY\cite{meyer2001eiffel}. Besides the ANY class, Eiffel also has the NONE class, which is the class that inherits from every class in the language. Ruby pushes the object-orientation a little bit further with meta-objects. This subject will come back later on in section \ref{sec:metaclass}.
 \subsection{Access Control}
 In Eiffel there is no possibility to directly perform an assignment on the value of an attribute. The reason for this inability to assign attributes from the outside is because in Eiffel it is impossible to know from the outside of the object if the feature called is a stored or computed value. If there are changes in the implementation, they do not affect the client class by forcing it to change its interface. This concept is called the \emph{uniform-access principle} \cite{meyer2001eiffel, wiki:uniform} and is central in Eiffel. Because it is impossible to know if the expression is an attribute or a function, the only way to change the state of an object is thus to make a procedure than internally modifies the state: a "setter". But there exist a facility to make it look like assignment is directly possible. This mechanism is called assigner command and consists of specifying in the declaration of the attribute which is the related assignment procedure. The assignment of the attribute will be transformed at compile time in the assignment procedure specified in the declaration. They implemented this facility because developers are used to direct access in other programming languages.
 \\
@@ -148,10 +149,9 @@ In first instance this feature seems really helpful because it gives the possibi
 \\
 \\
 To summarize, open classes is thus a language feature that offers a lot of modularity and flexibility. It enable to extend and reuse third-party code in a simple way. This is certainly why this feature has been added in Ruby. But it is very important to note that open classes are in conflict with the principle of encapsulation. Every method can be accessed with open classes, even private methods and they can  be changed into public ones. It is thus really important of not abusing of this feature. 
-\subsubsection{Metaclass model}
+\subsubsection{Metamodel}
 \label{sec:metaclass}
-% http://en.wikipedia.org/wiki/Metaclass
-A metaclass is a special class that has classes as instances. It defines thus methods that every class and its instances should have. When asking to a class in Ruby from which class it is an instance, it will always return the class Class. This is logical since every class should inherit the methods defined in it. Thus the only metaclass in Ruby is thus the class Class.
+A metaclass \cite{wiki:metaclass, rubyMetaclass} is a special class that has classes as instances. It defines thus methods that every class and its instances should have. When asking to a class in Ruby from which class it is an instance, it will always return the class Class. This is logical since every class should inherit the methods defined in it. Thus the only metaclass in Ruby is thus the class Class.
 \\
 \\
 But lets look the meta-system a little bit more in details. In Ruby there exist meta-objects called \emph{eigenclasses}. Every object has its own eigenclass. Because classes are also objects in Ruby, they also have eigenclasses. And what is interesting is that eigenclasses also have eigenclasses. This is recursive and goes on forever. Thus there are three sorts of eigenclasses: eigenclasses for objects and for classes. 
@@ -161,7 +161,7 @@ But what is the usefulness of theses eigenclasses? When an instance method is de
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{Ruby.png}
-\caption{The Ruby metaclass model. Image from Wikipedia}
+\caption{The Ruby metaclass model. Image from Wikipedia \cite{wiki:metaclass}}
 \label{fig:metaclass}
 \end{figure}
 The method lookup mechanism works thus as follows: 
@@ -174,7 +174,7 @@ The method lookup mechanism works thus as follows:
 The same lookup procedure is applied for class method calls, but then it is the eigenclass class that is looked up. Also it is interesting to note that the superclass of the eigenclass of the BasicObject class is the class Class, while the superclass of the BasicObject class is nil.
 \\
 \\
-This metamodel description gives more explanation on how everything in Ruby are object. It also emphasizes another way of how Ruby can be flexible, every object can have its own specialized behaviour if the behaviour is added to its eigenclass object. Eiffel has no such metaclass model, even if everything is an object. 
+This metamodel description gives more explanation on how everything in Ruby are object. It also emphasizes another way of how Ruby can be flexible, every object can have its own specialized behaviour if the behaviour is added to its eigenclass object. Eiffel has no such metaclass model, even if everything is an object.
 \section{Conclusion}
 It is clear that even if Eiffel and Ruby are both object-oriented languages, they are very different in many aspects. Eiffel tries to achieve reliability through controlling everything. A good example is the selective export. It defines everything that may be exported and specifies a detailed list of clients. Ruby is more into the simplicity and flexibility. It gives the developer the tools for doing whatever they want and for complete different programming paradigms. The philosophies of the two languages are thus really different. Eiffel would probably be more used in the industry where people need a good framework for producing quality software. Ruby is a higher level programming language that can be used for a lot of different purposes, going from small to larger project. But in large project Ruby seems less adequate than Eiffel. Developers need to be aware of possibilities of Ruby's flexibility and may not abuse of it, otherwise the software will be difficult to maintain.
 \section{References}
