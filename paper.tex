@@ -151,10 +151,32 @@ To summarize, open classes is thus a language feature that offers a lot of modul
 \subsubsection{Metaclass model}
 \label{sec:metaclass}
 % http://en.wikipedia.org/wiki/Metaclass
-A metaclass is a class that has classes as instances in object-oriented context. It defines how a class and its instances have to work.
-
+A metaclass is a special class that has classes as instances. It defines thus methods that every class and its instances should have. When asking to a class in Ruby from which class it is an instance, it will always return the class Class. This is logical since every class should inherit the methods defined in it. Thus the only metaclass in Ruby is thus the class Class.
+\\
+\\
+But lets look the meta-system a little bit more in details. In Ruby there exist meta-objects called \emph{eigenclasses}. Every object has its own eigenclass. Because classes are also objects in Ruby, they also have eigenclasses. And what is interesting is that eigenclasses also have eigenclasses. This is recursive and goes on forever. Thus there are three sorts of eigenclasses: eigenclasses for objects and for classes. 
+\\
+\\
+But what is the usefulness of theses eigenclasses? When an instance method is defined, it is stored in the class. When a class method is defined, it is stored in the class' eigenclass. Thus the eigenclass serves to store class variables and class methods. Eigenclasses of objects are useful if the developer wants that this particular object has a different behaviour than the other objects of the same class. Specialized method for this object will be stored in the eigenclass of the object. And finally, Eigenclasses of eigenclasses do not store any method or data, thus the reason of there existence is for conceptually correctness. 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Ruby.png}
+\caption{The Ruby metaclass model. Image from Wikipedia}
+\label{fig:metaclass}
+\end{figure}
+The method lookup mechanism works thus as follows: 
+\begin{enumerate}
+	\item A method is called on the object
+	\item The method is looked up in the methods of the object's eigenclass
+	\item If the method is not found, the lookup continues in the class of the object
+	\item If the method is still not found, it looks the whole inheritance structure up to end with the class Class. 
+\end{enumerate}
+The same lookup procedure is applied for class method calls, but then it is the eigenclass class that is looked up. Also it is interesting to note that the superclass of the eigenclass of the BasicObject class is the class Class, while the superclass of the BasicObject class is nil.
+\\
+\\
+This metamodel description gives more explanation on how everything in Ruby are object. It also emphasizes another way of how Ruby can be flexible, every object can have its own specialized behaviour if the behaviour is added to its eigenclass object. Eiffel has no such metaclass model, even if everything is an object. 
 \section{Conclusion}
-It is clear that even if Eiffel and Ruby are both object-oriented languages, they are very different in many aspects.
+It is clear that even if Eiffel and Ruby are both object-oriented languages, they are very different in many aspects. Eiffel tries to achieve reliability through controlling everything. A good example is the selective export. It defines everything that may be exported and specifies a detailed list of clients. Ruby is more into the simplicity and flexibility. It gives the developer the tools for doing whatever they want and for complete different programming paradigms. The philosophies of the two languages are thus really different. Eiffel would probably be more used in the industry where people need a good framework for producing quality software. Ruby is a higher level programming language that can be used for a lot of different purposes, going from small to larger project. But in large project Ruby seems less adequate than Eiffel. Developers need to be aware of possibilities of Ruby's flexibility and may not abuse of it, otherwise the software will be difficult to maintain.
 \section{References}
 \bibliographystyle{plain}
 \bibliography{paper}
@@ -179,4 +201,6 @@ It is clear that even if Eiffel and Ruby are both object-oriented languages, the
 %OPEN CLASSES CODE
 \lstinputlisting[label=rb:openclasses,language=Ruby,caption={Open classes in Ruby}]{code_Ruby/openclass.rb}
 
+% METACLASS CODE
+\lstinputlisting[label=rb:metaclass,language=Ruby,caption={Metamodel in Ruby}]{code_Ruby/metaclass.rb}
 \end{document}
